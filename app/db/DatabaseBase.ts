@@ -1,25 +1,42 @@
-import { Database } from "better-sqlite3";
+import Database, {
+  Database as dbType,
+  Options as dbOptions
+} from 'better-sqlite3';
 
 export default abstract class DatabaseBase {
   abstract fileName: string;
   abstract filePath: string;
-  abstract database: Database;
-  abstract openDatabase(): Database;
-  abstract createDatabase(): void;
+  abstract database: dbType;
+  abstract options: dbOptions;
   abstract checkIfDatabaseExists(): boolean;
-  // abstract handleOpen(): void;
+  abstract init(): void;
 
-  close(): void {
-    this.getDatabase().close();
-  }
+  databaseOpen: boolean = false;
 
-  getDatabase(): Database {
+  openDatabase(options: dbOptions = {}): dbType {
+    if (this.isDatabaseOpen()) {
+      return this.database;
+    }
+
+    this.database = new Database(this.filePath, options);
+    this.database.pragma('journal_mode = WAL');
+    this.databaseOpen = true;
+
     return this.database;
   }
 
-  init(): void {
-    const db = this.getDatabase();
+  close(): void {
+    this.database.close();
+    this.databaseOpen = false;
+  }
 
-    //TODO
+  isDatabaseOpen(): boolean {
+    return this.databaseOpen === true;
+  }
+
+  checkIfOpen(): void {
+    if (!this.isDatabaseOpen()) {
+      throw new Error('Database is closed!');
+    }
   }
 }
