@@ -10,6 +10,12 @@ describe('MemoryDatabase', () => {
     expect(db).toBeInstanceOf(MemoryDatabase);
   });
 
+  it('has the expected schema', () => {
+    const statement = db.database.prepare("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name=?;");
+    const output = statement.get('tokens') as {'COUNT(*)': number};
+    expect(output['COUNT(*)']).toEqual(1);
+  });
+
   describe('un-used methods throw error', () => {
   });
 
