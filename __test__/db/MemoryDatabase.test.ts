@@ -1,22 +1,25 @@
-import MemoryDatabase from "@/app/db/MemoryDatabase";
+import MemoryDatabase, { TokenRowInsert, TokenRowResult } from "@/app/db/MemoryDatabase";
 
 describe('MemoryDatabase', () => {
   let db: MemoryDatabase;
   beforeEach(()=> {
     db = new MemoryDatabase();
   });
+  afterAll(() => {
+    db.close();
+  });
 
   it('is a MemoryDatabase class', () => {
     expect(db).toBeInstanceOf(MemoryDatabase);
   });
 
-  it('has the expected schema', () => {
-    const statement = db.database.prepare("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name=?;");
-    const output = statement.get('tokens') as {'COUNT(*)': number};
-    expect(output['COUNT(*)']).toEqual(1);
-  });
+  describe('it has the expected schema', () => {
+    it('has the expected table schema', () => {
+      const statement = db.database.prepare("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name=?;");
+      const queryResult = statement.get('tokens') as {'COUNT(*)': number};
+      expect(queryResult['COUNT(*)']).toEqual(1);
+    });
 
-  describe('un-used methods throw error', () => {
   });
 
   describe('methods', () => {
@@ -38,6 +41,11 @@ describe('MemoryDatabase', () => {
         db.close();
         expect(db.isDatabaseOpen()).toEqual(false);
       });
+
+      it('insertNewToken() inserts values', () => {
+        const values: TokenRowInsert = {token: 'foo', expiresAt: `${new Date()}`};
+        db.insertNewToken(values);
+      });
     });
 
     describe('with a closed Database', () => {
@@ -57,6 +65,11 @@ describe('MemoryDatabase', () => {
         expect(db.isDatabaseOpen()).toEqual(false);
         db.close();
         expect(db.isDatabaseOpen()).toEqual(false);
+      });
+
+      it('insertNewToken() throws an error', () => {
+        const values: TokenRowInsert = {token: 'foo', expiresAt: `${new Date()}`};
+        expect(() => (db.insertNewToken(values))).toThrow(Error);
       });
     })
   });
