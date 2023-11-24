@@ -10,7 +10,6 @@ export default abstract class DatabaseBase {
   abstract options: dbOptions;
   abstract checkIfDatabaseExists(): boolean;
   abstract init(): void;
-
   databaseOpen: boolean = false;
 
   openDatabase(options: dbOptions = {}): dbType {

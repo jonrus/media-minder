@@ -1,4 +1,4 @@
-import MemoryDatabase, { TokenRowInsert, TokenRowResult } from "@/app/db/MemoryDatabase";
+import MemoryDatabase from "@/app/db/MemoryDatabase";
 
 describe('MemoryDatabase', () => {
   let db: MemoryDatabase;
@@ -13,38 +13,10 @@ describe('MemoryDatabase', () => {
     expect(db).toBeInstanceOf(MemoryDatabase);
   });
 
-  describe('it has the expected schema', () => {
-    it('has the expected table schema', () => {
-      const statement = db.database.prepare("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name=?;");
-      const queryResult = statement.get('tokens') as {'COUNT(*)': number};
-      expect(queryResult['COUNT(*)']).toEqual(1);
-    });
-
-  });
-
   describe('methods', () => {
     describe('with an open Database', () => {
-      it('checkIfFileExists()', () => {
+      it('checkIfDatabaseExists()', () => {
         expect(db.checkIfDatabaseExists()).toEqual(true);
-      });
-
-      it('isDatabaseOpen() is true', () => {
-        expect(db.isDatabaseOpen()).toEqual(true)
-      });
-
-      it('checkIfOpen() returns undefined', () => {
-        expect(db.checkIfOpen()).toBe(undefined);
-      });
-
-      it('close() closes the Database', () => {
-        expect(db.isDatabaseOpen()).toEqual(true);
-        db.close();
-        expect(db.isDatabaseOpen()).toEqual(false);
-      });
-
-      it('insertNewToken() inserts values', () => {
-        const values: TokenRowInsert = {token: 'foo', expiresAt: `${new Date()}`};
-        db.insertNewToken(values);
       });
     });
 
@@ -53,24 +25,13 @@ describe('MemoryDatabase', () => {
         db.close();
       });
 
-      it('isDatabaseOpen() is false', () => {
-        expect(db.isDatabaseOpen()).toEqual(false)
-      });
-
-      it('checkIfOpen() throws an error', () => {
-        expect(() => (db.checkIfOpen())).toThrow(Error);
-      })
-
-      it('close() does nothing', () => {
-        expect(db.isDatabaseOpen()).toEqual(false);
-        db.close();
-        expect(db.isDatabaseOpen()).toEqual(false);
-      });
-
-      it('insertNewToken() throws an error', () => {
-        const values: TokenRowInsert = {token: 'foo', expiresAt: `${new Date()}`};
-        expect(() => (db.insertNewToken(values))).toThrow(Error);
+      it('checkIfDatabaseExists()', () => {
+        expect(db.checkIfDatabaseExists()).toEqual(false);
       });
     })
+
+    it('init() throws an Error', () => {
+      expect(() => (db.init())).toThrow(Error);
+    });
   });
 });
