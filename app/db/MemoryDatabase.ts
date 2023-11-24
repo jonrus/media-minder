@@ -24,6 +24,6 @@ export default class MemoryDatabase extends DatabaseBase {
   }
 
   init(): void {
-    throw new Error('Sub-class should implement this method'); //TODO: fill in message
+    throw new Error('Sub-class should implement this method');
   }
 }
