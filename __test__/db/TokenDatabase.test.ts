@@ -29,6 +29,15 @@ describe('TokenDatabase', () => {
         db.insertNewToken(values);
       });
 
+      it('getActiveTokenRow() returns a result', () => {
+        // Insert a token row
+        const values: TokenRowInsert = {token: 'foo', expiresAt: `${new Date()}`};
+        db.insertNewToken(values);
+
+        const tokenRow = db.getActiveTokenRow();
+        expect(tokenRow.token).toEqual('foo');
+      });
+
       describe('invalidateAllTokens()', () => {
         beforeEach(() => {
           const validToken: TokenRowInsert = {token: 'valid', expiresAt: `${new Date()}`};
@@ -39,7 +48,8 @@ describe('TokenDatabase', () => {
           db.insertNewToken(validToken2);
         });
         it('invalidateAllTokens() marks are all active tokens invalid', () => {
-
+          db.invalidateAllTokens();
+          expect(db.getActiveTokenRow()).toEqual(undefined);
         });
       });
     });
@@ -52,6 +62,10 @@ describe('TokenDatabase', () => {
       it('insertNewToken() throws an error', () => {
         const values: TokenRowInsert = {token: 'foo', expiresAt: `${new Date()}`};
         expect(() => (db.insertNewToken(values))).toThrow(Error);
+      });
+
+      it('getActiveTokenRow() returns a result', () => {
+        expect(() => (db.getActiveTokenRow())).toThrow(Error);
       });
     })
 

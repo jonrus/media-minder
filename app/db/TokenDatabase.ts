@@ -12,8 +12,13 @@ export type TokenRowResult = TokenRowInsert & {
 }
 
 export default class TokenDatabase extends MemoryDatabase {
+  isTokenActive: boolean;
+  token: string;
+
   constructor() {
     super();
+    this.isTokenActive = false;
+    this.token = '';
     this.init();
   }
 
@@ -61,10 +66,21 @@ export default class TokenDatabase extends MemoryDatabase {
     query.run();
   }
 
-  // getActiveTokenRow(): TokenRowResult {
-  //   this.checkIfOpen();
-  // }
+  getActiveTokenRow(): TokenRowResult {
+    this.checkIfOpen();
 
-  // getActiveToken(): string {
-  // }
+    const selectTokenStatement = `
+      SELECT *
+      FROM tokens
+      WHERE expired = 0;`;
+
+    const query = this.database.prepare(selectTokenStatement);
+    const queryResult = query.get() as TokenRowResult;
+
+    return queryResult;
+  }
+
+  getActiveToken(): string {
+    return this.token;
+  }
 }
