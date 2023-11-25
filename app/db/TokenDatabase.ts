@@ -35,6 +35,7 @@ export default class TokenDatabase extends MemoryDatabase {
       CREATE TABLE IF NOT EXISTS tokens (
         tokenId INTEGER PRIMARY KEY,
         token TEXT NOT NULL,
+        createdAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
         expiresAt TEXT NOT NULL,
         expired BOOLEAN NOT NULL DEFAULT 0,
         deletedAt TEXT DEFAULT NULL
@@ -59,7 +60,7 @@ export default class TokenDatabase extends MemoryDatabase {
       UPDATE tokens
       SET
         expired = 1,
-        deletedAt = DATETIME()
+        deletedAt = CURRENT_TIMESTAMP
       WHERE expired = 0;`;
 
     const query = this.database.prepare(updateTokensStatement);
