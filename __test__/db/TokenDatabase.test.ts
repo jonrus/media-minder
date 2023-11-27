@@ -4,13 +4,13 @@ describe('TokenDatabase', () => {
   let db: TokenDatabase;
 
   beforeEach(() => {
-    db = new TokenDatabase();
+    db = new TokenDatabase('token_test.db', './__test__/db/');
   });
   afterAll(() => {
     db.close();
   });
 
-  it('is a MemoryDatabase class', () => {
+  it('is a TokenDatabase class', () => {
     expect(db).toBeInstanceOf(TokenDatabase);
   });
 

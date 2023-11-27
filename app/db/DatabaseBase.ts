@@ -13,13 +13,15 @@ export default abstract class DatabaseBase {
   databaseOpen: boolean = false;
 
   openDatabase(options: dbOptions = {}): dbType {
-    if (this.isDatabaseOpen()) {
-      return this.database;
+    if (this.fileName === undefined) {
+      throw new Error('Must specify a file name for the database!');
     }
 
-    this.database = new Database(this.filePath, options);
-    this.database.pragma('journal_mode = WAL');
-    this.databaseOpen = true;
+    if (this.isDatabaseOpen() === false) {
+      this.database = new Database(this.filePath, options);
+      this.database.pragma('journal_mode = WAL');
+      this.databaseOpen = true;
+    }
 
     return this.database;
   }

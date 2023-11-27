@@ -1,4 +1,4 @@
-import MemoryDatabase from "./MemoryDatabase"
+import FileDatabase from "./FileDatabase";
 
 export type TokenRowInsert = {
   token: string,
@@ -11,23 +11,17 @@ export type TokenRowResult = TokenRowInsert & {
   deletedAt: string,
 }
 
-export default class TokenDatabase extends MemoryDatabase {
+export default class TokenDatabase extends FileDatabase {
   isTokenActive: boolean;
   token: string;
 
-  constructor() {
-    super();
+  constructor(fName: string, fPath = './') {
+    super(fName, fPath);
     this.isTokenActive = false;
     this.token = '';
     this.init();
   }
 
-  /*
-    This method will build out the db schema.
-    As this is an in memory db all the schema will be defined
-    in this method - the changes/rollbacks pattern will not be
-    used here.
-  */
   init(): void {
     // SQLite does _not_ have date/time types
     // https://www.sqlite.org/lang_datefunc.html
