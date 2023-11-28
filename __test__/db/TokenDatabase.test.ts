@@ -1,4 +1,5 @@
 import TokenDatabase, { TokenRowInsert, TokenRowResult } from "@/app/db/TokenDatabase";
+import { removeFile } from "@/app/lib/helpers";
 
 describe('TokenDatabase', () => {
   let db: TokenDatabase;
@@ -6,8 +7,11 @@ describe('TokenDatabase', () => {
   beforeEach(() => {
     db = new TokenDatabase('token_test.db', './__test__/db/');
   });
-  afterAll(() => {
+  afterEach(() => {
     db.close();
+  });
+  afterAll(() => {
+    removeFile('./__test__/db/token_test.db');
   });
 
   it('is a TokenDatabase class', () => {
@@ -68,6 +72,5 @@ describe('TokenDatabase', () => {
         expect(() => (db.getActiveTokenRow())).toThrow(Error);
       });
     })
-
   });
 });

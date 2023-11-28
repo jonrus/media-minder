@@ -39,7 +39,7 @@ export default class TokenDatabase extends FileDatabase {
   }
 
   insertNewToken(tokenObj: TokenRowInsert): void {
-    this.checkIfOpen();
+    this.throwIfNotOpen();
 
     const insertStatement = this.database.prepare(`
       INSERT INTO tokens (token, expiresAt) VALUES (@token, @expiresAt);`);
@@ -48,7 +48,7 @@ export default class TokenDatabase extends FileDatabase {
   }
 
   invalidateAllTokens(): void {
-    this.checkIfOpen();
+    this.throwIfNotOpen();
 
     const updateTokensStatement = `
       UPDATE tokens
@@ -62,7 +62,7 @@ export default class TokenDatabase extends FileDatabase {
   }
 
   getActiveTokenRow(): TokenRowResult {
-    this.checkIfOpen();
+    this.throwIfNotOpen();
 
     const selectTokenStatement = `
       SELECT *

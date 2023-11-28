@@ -15,7 +15,7 @@ export default class MemoryDatabase extends DatabaseBase {
     super();
     this.fileName = ':memory:';
     this.filePath = this.fileName;
-    this.options = {verbose: console.log};
+    this.options = {};
     this.database = this.openDatabase();
   }
 

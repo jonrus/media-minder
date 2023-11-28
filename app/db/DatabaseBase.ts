@@ -10,7 +10,6 @@ export default abstract class DatabaseBase {
   abstract options: dbOptions;
   abstract checkIfDatabaseExists(): boolean;
   abstract init(): void;
-  databaseOpen: boolean = false;
 
   openDatabase(options: dbOptions = {}): dbType {
     if (this.fileName === undefined) {
@@ -20,22 +19,26 @@ export default abstract class DatabaseBase {
     if (this.isDatabaseOpen() === false) {
       this.database = new Database(this.filePath, options);
       this.database.pragma('journal_mode = WAL');
-      this.databaseOpen = true;
     }
 
     return this.database;
   }
 
   close(): void {
-    this.database.close();
-    this.databaseOpen = false;
+    if (this.isDatabaseOpen()) {
+      this.database.close();
+    }
   }
 
   isDatabaseOpen(): boolean {
-    return this.databaseOpen === true;
+    // This method is called prior to database being assigned
+    if (this.database === undefined) {
+      return false;
+    }
+    return this.database.open === true;
   }
 
-  checkIfOpen(): void {
+  throwIfNotOpen(): void {
     if (!this.isDatabaseOpen()) {
       throw new Error('Database is closed!');
     }

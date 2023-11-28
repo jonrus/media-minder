@@ -51,8 +51,8 @@ describe('DatabaseBase', () => {
         expect(db.isDatabaseOpen()).toEqual(true)
       });
 
-      it('checkIfOpen() returns undefined', () => {
-        expect(db.checkIfOpen()).toBe(undefined);
+      it('throwIfNotOpen() returns undefined', () => {
+        expect(db.throwIfNotOpen()).toBe(undefined);
       });
 
       it('close() closes the Database', () => {
@@ -71,8 +71,8 @@ describe('DatabaseBase', () => {
         expect(db.isDatabaseOpen()).toEqual(false)
       });
 
-      it('checkIfOpen() throws an error', () => {
-        expect(() => (db.checkIfOpen())).toThrow(Error);
+      it('throwIfNotOpen() throws an error', () => {
+        expect(() => (db.throwIfNotOpen())).toThrow(Error);
       })
 
       it('close() does nothing', () => {

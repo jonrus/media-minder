@@ -1,12 +1,16 @@
 import FileDatabase from "@/app/db/FileDatabase";
+import { removeFile } from "@/app/lib/helpers";
 
 describe('FileDatabase', () => {
   let db: FileDatabase;
   beforeEach(() => {
     db = new FileDatabase('file_test.db', './__test__/db/');
   });
-  afterAll(() => {
+  afterEach(() => {
     db.close();
+  });
+  afterAll(() => {
+    removeFile('./__test__/db/file_test.db');
   });
 
   it('is a FileDatabase class', () => {

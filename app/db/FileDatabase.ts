@@ -4,6 +4,7 @@ import {
   Options as dbOptions
 } from 'better-sqlite3';
 import DatabaseBase from './DatabaseBase';
+import { doesFileExist } from '@/app/lib/helpers';
 
 
 export default class FileDatabase extends DatabaseBase {
@@ -22,14 +23,7 @@ export default class FileDatabase extends DatabaseBase {
   }
 
   checkIfDatabaseExists(): boolean {
-    try {
-      if (fs.existsSync(this.filePath)) {
-        return true;
-      }
-      return false;
-    } catch(err) {
-      return false;
-    }
+    return doesFileExist(this.filePath);
   }
 
   init(): void {
